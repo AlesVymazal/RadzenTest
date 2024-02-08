@@ -4,6 +4,7 @@
 @inject IJSRuntime JSRuntime
 @inject DialogService DialogService
 @inject ColorService MyColorService
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 
 <h3>Home @MyColorService.col</h3>
@@ -66,8 +67,23 @@
 
     protected override void OnInitialized()
     {
+
         base.OnInitialized();
         MyColorService.OnChange += Refresh;
+
+
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            //Identity Name == login
+            var _user = user.Identity.Name;
+        }
     }
 
     public void Refresh()

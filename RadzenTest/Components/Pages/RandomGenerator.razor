@@ -7,7 +7,10 @@
 @inject DialogService DialogService
 @inject ColorService MyColorService
 @using System.Timers;
+@using Microsoft.AspNetCore.Authorization
 
+@attribute [AllowAnonymous]
+@* //@attribute [Authorize] *@
 
 <RadzenButton Click=@SimulationAsync Text="Primary" ButtonStyle="ButtonStyle.Primary" Icon=@icon />
 
