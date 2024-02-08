@@ -1,0 +1,65 @@
+﻿@implements IDisposable
+@using BlazorDemoMqtt.Services
+@using MQTTnet.Client
+@using Microsoft.VisualStudio.Utilities
+@inject IConfiguration configuration
+@inject QuickAndDirtyMqttClientService _quickAndDirtyMqttClientService
+@page "/opcuasimulator"
+@rendermode InteractiveServer
+
+<MqttStatusComponent></MqttStatusComponent>
+
+<h3>OpcUaSimulator</h3>
+
+<div class="terminal">
+    <pre>
+        @foreach (var item in circularBuffer.ToArray())
+        {
+        <span style="color:blue">@($"{DateTime.Now} --> ")</span>
+
+            @($"{item}")       
+        }
+    </pre>
+</div>
+
+<style>
+    .terminal {
+        background-color: black;
+        color: white;
+        margin-top: 20px;
+        overflow-y: auto;
+        padding: 5px;
+    }
+</style>
+
+@code {
+    protected string mqttTopic = "Brno.Demoloop.MP01/opcuasimulator";
+
+    protected CircularBuffer<string> circularBuffer = new CircularBuffer<string>(500);
+
+    protected override void OnInitialized()
+    {
+        mqttTopic = configuration?.GetValue<string>("MQTT_TOPIC_SIMULATOR");
+        _quickAndDirtyMqttClientService.MqttClient.ApplicationMessageReceivedAsync += ApplicationMessageReceivedHandlerAsync;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await _quickAndDirtyMqttClientService.SubscribeAsync(mqttTopic);
+    }
+
+    protected async Task ApplicationMessageReceivedHandlerAsync(MqttApplicationMessageReceivedEventArgs arg)
+    {
+        if (arg.ApplicationMessage.Topic == this.mqttTopic)
+        {
+            circularBuffer.Add(System.Text.Encoding.UTF8.GetString(arg.ApplicationMessage.PayloadSegment));
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    void IDisposable.Dispose()
+    {
+        _quickAndDirtyMqttClientService.MqttClient.ApplicationMessageReceivedAsync -= ApplicationMessageReceivedHandlerAsync;
+        _quickAndDirtyMqttClientService.UnsubscribeAsync(mqttTopic).Wait(TimeSpan.FromSeconds(3));
+    }
+}

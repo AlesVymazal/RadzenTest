@@ -1,3 +1,4 @@
+using BlazorDemoMqtt.Services;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +21,10 @@ builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuth
 builder.Services.AddScoped<DialogService>();
 builder.Services.AddSingleton<ColorService>();
 builder.Services.AddRadzenComponents();
+builder.Services.AddSingleton<QuickAndDirtyMqttClientService>();
+builder.Services.AddHostedService(
+    provider => provider.GetRequiredService<QuickAndDirtyMqttClientService>());
+
 
 builder.Services.AddAuthentication(options =>
     {

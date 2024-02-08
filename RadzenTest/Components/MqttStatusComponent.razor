@@ -1,0 +1,24 @@
+﻿@implements IDisposable
+@using BlazorDemoMqtt.Services
+@using MQTTnet.Client
+@inject QuickAndDirtyMqttClientService _mqttClientService
+<h3>MqttStatus: @(_mqttClientService.MqttClient.IsConnected ? "Connected" : "Disconnected")</h3>
+
+@code {
+    protected override void OnInitialized()
+    {
+        _mqttClientService.MqttClient.ConnectedAsync += StatusChangedHandlerAsync;
+        _mqttClientService.MqttClient.DisconnectedAsync += StatusChangedHandlerAsync;
+    }
+
+    private async Task StatusChangedHandlerAsync(object arg)
+    {
+        await InvokeAsync(StateHasChanged);
+    }
+
+    void IDisposable.Dispose()
+    {
+        _mqttClientService.MqttClient.ConnectedAsync -= StatusChangedHandlerAsync;
+        _mqttClientService.MqttClient.DisconnectedAsync -= StatusChangedHandlerAsync;
+    }
+}

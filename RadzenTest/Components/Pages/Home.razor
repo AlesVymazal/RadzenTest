@@ -6,8 +6,8 @@
 @inject ColorService MyColorService
 
 
-<h3>Home</h3>
-
+<h3>Home @MyColorService.col</h3>
+<RadzenButton Click=setColor>set color</RadzenButton>
 
 <svg version ="1.1"
      width="1920"
@@ -23,14 +23,16 @@
         <path onclick=@(() => Dialog(1010)) d="M 1200,-376.75 H 0 V -376.75 -345 -345 345 345 376.75 376.75 H 1200 V 376.75 345 345 -345 -345 Z"
               transform="rotate(180,-43023.085,-58594.95)"
               id="01005"
-              fill=@MyColorService.GetColor(2)/>
+              fill=@MyColorService.col />
         <path onclick=@(() => Dialog(1005))
               d="M 2808,-410 H 0 V -410 -406.5837 -406.5837 -348.4163 -348.4163 345 345 406.5837 406.5837 410 410 H 2808 V 410 348.4163 348.4163 -345 -345 -406.5837 -406.5837 Z"
               transform="rotate(180,-43623.085,-58594.95)"
               id="01010"
-              fill=@MyColorService.GetColor(1)/>
+              fill=@MyColorService.col/>
     </g>
 </svg>
+
+
 
 
 @code {
@@ -55,6 +57,11 @@
     public void Dialog(int id)
     {
         ShowInlineDialog(id);
+    }
+    public void setColor()
+    {
+        string col = Random.Shared.Next(0, 2) == 1 ? "blue" : "green";
+        MyColorService.col = col;
     }
 }
 
