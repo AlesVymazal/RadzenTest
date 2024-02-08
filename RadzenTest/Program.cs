@@ -19,7 +19,7 @@ builder.Services.AddScoped<IdentityUserAccessor>();
 builder.Services.AddScoped<IdentityRedirectManager>();
 builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
 builder.Services.AddScoped<DialogService>();
-builder.Services.AddSingleton<ColorService>();
+builder.Services.AddScoped<ColorService>();
 builder.Services.AddRadzenComponents();
 builder.Services.AddSingleton<QuickAndDirtyMqttClientService>();
 builder.Services.AddHostedService(
