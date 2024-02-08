@@ -1,0 +1,27 @@
+﻿@page "/table"
+
+<RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                Data="@customers" TItem="Customer" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or">
+    <Columns>
+        <RadzenDataGridColumn TItem="Customer" Property="CustomerID" Title="Customer ID" />
+        <RadzenDataGridColumn TItem="Customer" Property="CompanyName" Title="Company Name" />
+        <RadzenDataGridColumn TItem="Customer" Property="ContactName" Title="Contact Name" />
+    </Columns>
+</RadzenDataGrid>
+
+@code {
+    IEnumerable<Customer> customers = new List<Customer>();
+
+    protected override void OnInitialized()
+    {
+        customers = new List<Customer> { new Customer { CustomerID = "1", CompanyName = "def", ContactName = "ghj"},
+                                         new Customer { CustomerID = "2", CompanyName = "fhgfh", ContactName = "gdgdgj"}};
+    }
+
+    public class Customer
+    {
+        public string? CustomerID { get; set; }
+        public string? CompanyName { get; set; }
+        public string? ContactName { get; set; }
+    }
+}

@@ -1,0 +1,31 @@
+@rendermode InteractiveServer
+@inject NavigationManager nav
+
+<RadzenHeader Style="background-color:#3b3b3b">
+    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0">
+        <RadzenSidebarToggle Click="@(() => sidebarExpanded = !sidebarExpanded)" />
+        <RadzenLabel Text="Header" />
+    </RadzenStack>
+</RadzenHeader>
+<RadzenSidebar Responsive="false" Style="width: max-content">
+    <RadzenPanelMenu DisplayStyle="@(sidebarExpanded ? MenuItemDisplayStyle.IconAndText : MenuItemDisplayStyle.Icon)" ShowArrow="false" Match="NavLinkMatch.All">
+        <RadzenPanelMenuItem Text="Overview" Icon="home" Path="/" />
+        <RadzenPanelMenuItem Text="Services" Icon="store" Path="/servicestest" />
+        <RadzenPanelMenuItem Text="BGWorker" Icon="work" Path="/bgworker" />
+        <RadzenPanelMenuItem Text="Random" Icon="123" Path="/randomgenerator" />
+        <RadzenPanelMenuItem Text="Table" Icon="dashboard" Path="/table"/>
+        <RadzenPanelMenuItem Text="UI Fundamentals" Icon="auto_awesome">
+            <RadzenPanelMenuItem Text="Themes" Icon="color_lens" />
+            <RadzenPanelMenuItem Text="Colors" Icon="invert_colors" />
+        </RadzenPanelMenuItem>
+        <RadzenPanelMenuItem Text="register" Icon="accessibility" Path="/account/register" />
+        <RadzenPanelMenuItem Text="login" Icon="login" Path="/account/login" />
+    </RadzenPanelMenu>
+</RadzenSidebar>
+<RadzenDialog></RadzenDialog>
+<RadzenDataList TItem="dynamic"></RadzenDataList>
+
+@code {
+    [Parameter]
+    public bool sidebarExpanded { get; set; }
+}

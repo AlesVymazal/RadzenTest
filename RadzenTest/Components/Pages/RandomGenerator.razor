@@ -1,0 +1,94 @@
+﻿@page "/randomgenerator"
+
+<h3>RandomGenerator</h3>
+
+@rendermode InteractiveServer
+@inject IJSRuntime JSRuntime
+@inject DialogService DialogService
+@inject ColorService MyColorService
+@using System.Timers;
+
+
+<RadzenButton Click=@SimulationAsync Text="Primary" ButtonStyle="ButtonStyle.Primary" Icon=@icon />
+
+<svg version="1.1"
+     width="1920"
+     height="1080"
+     id="svg436"
+     xmlns=http://www.w3.org/2000/svg
+     xmlns:svg=http://www.w3.org/2000/svg>
+    <defs id="defs440" />
+    <g transform="matrix(0.04930016,0,0,-0.04930016,4916.6669,-5721.8176)"
+       stroke-width="10"
+       style="fill:none;stroke:#000000"
+       id="g434">
+        <path onclick=@(() => Dialog(1010)) d="M 1200,-376.75 H 0 V -376.75 -345 -345 345 345 376.75 376.75 H 1200 V 376.75 345 345 -345 -345 Z"
+              transform="rotate(180,-43023.085,-58594.95)"
+              id="01005"
+              fill=@color1 />
+        <path onclick=@(() => Dialog(1005))
+              d="M 2808,-410 H 0 V -410 -406.5837 -406.5837 -348.4163 -348.4163 345 345 406.5837 406.5837 410 410 H 2808 V 410 348.4163 348.4163 -345 -345 -406.5837 -406.5837 Z"
+              transform="rotate(180,-43623.085,-58594.95)"
+              id="01010"
+              fill=@color2 />
+    </g>
+</svg>
+
+
+@code {
+
+    async Task ShowInlineDialog(int id)
+    {
+        var result = await DialogService.OpenAsync("Simple Dialog", ds =>
+    @<RadzenStack Gap="1.5rem">
+        <p>Conveyor ID <b>@id</b></p>
+        <RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
+            <RadzenStack Orientation="Orientation.Horizontal">
+                <RadzenButton Text="Ok" Click="() => ds.Close(true)" Style="width: 80px;" />
+                <RadzenButton Text="Cancel" Click="() => ds.Close(false)" ButtonStyle="ButtonStyle.Light" />
+            </RadzenStack>
+            /*
+            <!--<RadzenButton Text="Refresh" Click="(() => { orderID = 10249; ds.Refresh(); })" ButtonStyle="ButtonStyle.Light" />
+                        */
+                    </RadzenStack>
+                </RadzenStack>
+    );
+    }
+    public void Dialog(int id)
+    {
+        ShowInlineDialog(id);
+    }
+
+    string color1 = "red";
+    string color2 = "green";
+    public static System.Timers.Timer timer { get; set; } = new System.Timers.Timer(500);
+    public static string icon { get; set; } = "play_arrow";
+    public static string[] groupIDs { get; set; } = Array.Empty<string>();
+    public static bool inputSelected { get; set; } = false;
+    public static string SVG { get; set; } = string.Empty;
+    private void OnTimedEvent(Object source, ElapsedEventArgs e)
+    {
+
+        color1 = @MyColorService.GetColor(Random.Shared.Next(0, 3));
+        color2 = @MyColorService.GetColor(Random.Shared.Next(0, 3));
+        InvokeAsync(() => this.StateHasChanged());
+    }
+    public async Task<string> StartSimulationAsync()
+    {
+        timer.Elapsed += OnTimedEvent;
+        timer.AutoReset = true;
+        timer.Enabled = true;
+        return "pause";
+    }
+    public string StopSimulation()
+    {
+        timer.Enabled = false;
+        return "play_arrow";
+    }
+    public async Task SimulationAsync()
+    {
+        icon = icon == "play_arrow" ? await StartSimulationAsync() : StopSimulation();
+    }
+}
+
+
