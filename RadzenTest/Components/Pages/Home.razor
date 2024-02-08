@@ -63,6 +63,19 @@
         string col = Random.Shared.Next(0, 2) == 1 ? "blue" : "green";
         MyColorService.col = col;
     }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        MyColorService.OnChange += Refresh;
+    }
+
+    public void Refresh()
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+    void Dispose() => MyColorService.OnChange -= Refresh;
 }
 
 
